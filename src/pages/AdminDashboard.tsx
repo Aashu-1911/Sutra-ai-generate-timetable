@@ -2,15 +2,31 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, MessageSquare, Plus, Eye, Edit, Home, Bell } from "lucide-react";
+import { Calendar, Users, MessageSquare, Plus, Eye, Edit, Home, Bell, Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
-  const [messages] = useState([
+  const { toast } = useToast();
+  const [messages, setMessages] = useState([
     { id: 1, faculty: "Dr. Smith", message: "Not available Monday 10-11 AM", time: "2 hours ago", status: "unread" },
     { id: 2, faculty: "Prof. Johnson", message: "Lab unavailable Friday afternoon", time: "5 hours ago", status: "read" },
     { id: 3, faculty: "Dr. Williams", message: "Requesting schedule change for Tuesday", time: "1 day ago", status: "unread" },
   ]);
+
+  const handleMarkDone = (messageId: number) => {
+    setMessages(prev => prev.map(msg => 
+      msg.id === messageId 
+        ? { ...msg, status: "resolved" as const }
+        : msg
+    ));
+    
+    const message = messages.find(m => m.id === messageId);
+    toast({
+      title: "Request Resolved",
+      description: `Marked ${message?.faculty}'s request as done. Faculty has been notified.`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-accent via-secondary to-muted">
@@ -106,14 +122,33 @@ const AdminDashboard = () => {
                     className={`p-3 rounded-lg border transition-colors ${
                       msg.status === 'unread' 
                         ? 'bg-accent border-primary/20' 
+                        : msg.status === 'resolved'
+                        ? 'bg-primary/5 border-primary/30'
                         : 'bg-muted/50 border-border'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-primary">{msg.faculty}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="font-medium text-primary">{msg.faculty}</span>
+                        {msg.status === 'resolved' && (
+                          <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
+                            Resolved
+                          </Badge>
+                        )}
+                      </div>
                       <span className="text-xs text-muted-foreground">{msg.time}</span>
                     </div>
-                    <p className="text-sm text-foreground">{msg.message}</p>
+                    <p className="text-sm text-foreground mb-2">{msg.message}</p>
+                    {msg.status !== 'resolved' && (
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleMarkDone(msg.id)}
+                        className="bg-primary hover:bg-primary-light text-primary-foreground"
+                      >
+                        <Check className="w-3 h-3 mr-1" />
+                        Mark Done
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>

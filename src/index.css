@@ -17,20 +17,20 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* NEP 2020 Timetable Generator Light Color Scheme */
-    --primary: 214 60% 45%; /* Lighter Chambray */
+    /* Color Scheme from provided palette */
+    --primary: 214 60% 33%; /* Chambray #214885 */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 214 50% 65%; /* Light Chambray */
-    --primary-lighter: 214 40% 75%; /* Pale Sky */
+    --primary-light: 214 47% 49%; /* Light Chambray #4A6BAF */
+    --primary-lighter: 214 53% 71%; /* Pale Sky #8FAFD9 */
 
-    --secondary: 214 40% 92%; /* Light Powder Blue */
-    --secondary-foreground: 214 50% 35%;
+    --secondary: 214 56% 81%; /* Powder Blue #B7D0EA */
+    --secondary-foreground: 214 60% 33%;
 
-    --muted: 214 30% 96%; /* Very Light Mystic */
-    --muted-foreground: 214 20% 55%;
+    --muted: 214 25% 90%; /* Mystic #DDE5ED */
+    --muted-foreground: 214 20% 45%;
 
-    --accent: 214 60% 97%; /* Very Light Ice Blue */
-    --accent-foreground: 214 50% 35%;
+    --accent: 214 79% 94%; /* Ice Blue #E1F0FA */
+    --accent-foreground: 214 60% 33%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
