@@ -15,10 +15,15 @@ const TimetableGenerator = () => {
   const { toast } = useToast();
 
   const branches = [
-    { value: "bed", label: "B.Ed (Bachelor of Education)" },
-    { value: "med", label: "M.Ed (Master of Education)" },
-    { value: "fyup", label: "FYUP (Four Year Undergraduate Programme)" },
-    { value: "itep", label: "ITEP (Integrated Teacher Education Programme)" }
+    { value: "computer-eng", label: "Computer Engineering" },
+    { value: "computer-software", label: "Computer Engineering (Software)" },
+    { value: "aiml", label: "AIML (Artificial Intelligence & Machine Learning)" },
+    { value: "ds", label: "DS (Data Science)" },
+    { value: "entc", label: "ENTC (Electronics & Telecommunication)" },
+    { value: "it", label: "IT (Information Technology)" },
+    { value: "mechanical", label: "Mechanical Engineering" },
+    { value: "chemical", label: "Chemical Engineering" },
+    { value: "civil", label: "Civil Engineering" }
   ];
 
   const divisions = [
@@ -141,10 +146,10 @@ const TimetableGenerator = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <label className="text-sm font-medium text-primary mb-2 block">Select Branch/Program</label>
+                <label className="text-sm font-medium text-primary mb-2 block">Select Branch</label>
                 <Select value={selectedBranch} onValueChange={setSelectedBranch}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose a program" />
+                    <SelectValue placeholder="Choose a branch" />
                   </SelectTrigger>
                   <SelectContent>
                     {branches.map((branch) => (
