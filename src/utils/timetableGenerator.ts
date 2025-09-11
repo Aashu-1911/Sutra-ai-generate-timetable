@@ -3,26 +3,19 @@ import { teachers, timeSlots, days, rooms, type TimetableSlot, type DaySchedule 
 export function generateTimetable(branch: string, division: string): DaySchedule[] {
   const schedule: DaySchedule[] = [];
   const classSlots = timeSlots.filter(slot => slot.type === 'class');
-  const totalSlotsPerWeek = classSlots.length * 5; // 8 slots per day * 5 days = 40 slots
   
   // Get theory and lab subjects
   const theorySubjects = teachers.filter(t => t.type === 'TH');
   const labSubjects = teachers.filter(t => t.type === 'LAB');
   
-  // Calculate sessions needed (theory: 1 slot, lab: 2 slots)
-  const theorySessions = Math.min(theorySubjects.length, 15); // 3 sessions per subject
-  const labSessions = Math.min(labSubjects.length, 10); // 2 sessions per subject (each taking 2 slots)
-  const librarySessions = 2;
-  const projectSessions = 2;
-  
-  // Create session pool
+  // Create session pool with multiple sessions per subject for better distribution
   const sessionPool: TimetableSlot[] = [];
   
-  // Add theory sessions
-  theorySubjects.slice(0, 5).forEach((teacher, index) => {
+  // Add theory sessions - 3 sessions per subject
+  theorySubjects.forEach((teacher, index) => {
     for (let i = 0; i < 3; i++) {
       sessionPool.push({
-        slotId: `theory-${index}-${i}`,
+        slotId: `theory-${teacher.shortForm}-${i}`,
         teacher: teacher.shortForm,
         course: teacher.courseShort,
         type: 'TH',
@@ -31,11 +24,11 @@ export function generateTimetable(branch: string, division: string): DaySchedule
     }
   });
   
-  // Add lab sessions (2 slots each)
-  labSubjects.slice(0, 5).forEach((teacher, index) => {
+  // Add lab sessions - 2 sessions per subject (each takes 2 slots)
+  labSubjects.forEach((teacher, index) => {
     for (let i = 0; i < 2; i++) {
       sessionPool.push({
-        slotId: `lab-${index}-${i}`,
+        slotId: `lab-${teacher.shortForm}-${i}`,
         teacher: teacher.shortForm,
         course: teacher.courseShort,
         type: 'LAB',
@@ -47,7 +40,7 @@ export function generateTimetable(branch: string, division: string): DaySchedule
   });
   
   // Add library and project sessions
-  for (let i = 0; i < librarySessions; i++) {
+  for (let i = 0; i < 2; i++) {
     sessionPool.push({
       slotId: `library-${i}`,
       teacher: 'LIB',
@@ -57,7 +50,7 @@ export function generateTimetable(branch: string, division: string): DaySchedule
     });
   }
   
-  for (let i = 0; i < projectSessions; i++) {
+  for (let i = 0; i < 2; i++) {
     sessionPool.push({
       slotId: `project-${i}`,
       teacher: 'PROJ',
@@ -66,54 +59,82 @@ export function generateTimetable(branch: string, division: string): DaySchedule
       room: 'Project Room'
     });
   }
-  
-  // Shuffle sessions for randomization
-  const shuffledSessions = [...sessionPool].sort(() => Math.random() - 0.5);
-  
-  // Generate schedule for each day
+
+  // Initialize empty schedule for all days
   days.forEach(day => {
-    const daySchedule: DaySchedule = {
+    schedule.push({
       day,
       slots: new Array(classSlots.length).fill(null)
-    };
-    
-    let sessionIndex = 0;
-    let slotIndex = 0;
-    
-    while (slotIndex < classSlots.length && sessionIndex < shuffledSessions.length) {
-      const session = shuffledSessions[sessionIndex];
+    });
+  });
+
+  // Randomly distribute sessions across days and slots
+  const availableSessions = [...sessionPool];
+  
+  // Shuffle sessions for complete randomization
+  for (let i = availableSessions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [availableSessions[i], availableSessions[j]] = [availableSessions[j], availableSessions[i]];
+  }
+
+  // Place sessions randomly across the week
+  availableSessions.forEach(session => {
+    let placed = false;
+    let attempts = 0;
+    const maxAttempts = 50;
+
+    while (!placed && attempts < maxAttempts) {
+      const randomDay = Math.floor(Math.random() * 5);
+      const randomSlot = Math.floor(Math.random() * classSlots.length);
       
+      attempts++;
+
       if (session.isDoubleSlot) {
         // Lab session needs 2 consecutive slots
-        if (slotIndex < classSlots.length - 1) {
-          daySchedule.slots[slotIndex] = {
-            ...session,
-            slotId: `${day.toLowerCase()}-${slotIndex}`
-          };
-          daySchedule.slots[slotIndex + 1] = {
-            ...session,
-            slotId: `${day.toLowerCase()}-${slotIndex + 1}`,
-            course: `${session.course} (Cont.)`
-          };
-          slotIndex += 2;
-        } else {
-          slotIndex++;
+        if (randomSlot < classSlots.length - 1 && 
+            !schedule[randomDay].slots[randomSlot] && 
+            !schedule[randomDay].slots[randomSlot + 1]) {
+          
+          // Check if this teacher already has a session this day (for variety)
+          const dayHasTeacher = schedule[randomDay].slots.some(slot => 
+            slot && slot.teacher === session.teacher
+          );
+          
+          // Allow placement but prefer days without this teacher
+          if (!dayHasTeacher || attempts > 30) {
+            schedule[randomDay].slots[randomSlot] = {
+              ...session,
+              slotId: `${days[randomDay].toLowerCase()}-${randomSlot}`
+            };
+            schedule[randomDay].slots[randomSlot + 1] = {
+              ...session,
+              slotId: `${days[randomDay].toLowerCase()}-${randomSlot + 1}`,
+              course: `${session.course} (Cont.)`
+            };
+            placed = true;
+          }
         }
       } else {
         // Theory session needs 1 slot
-        daySchedule.slots[slotIndex] = {
-          ...session,
-          slotId: `${day.toLowerCase()}-${slotIndex}`
-        };
-        slotIndex++;
+        if (!schedule[randomDay].slots[randomSlot]) {
+          // Check if this teacher already has multiple sessions this day
+          const teacherSessionsToday = schedule[randomDay].slots.filter(slot => 
+            slot && slot.teacher === session.teacher
+          ).length;
+          
+          // Prefer variety but allow placement if needed
+          if (teacherSessionsToday < 2 || attempts > 30) {
+            schedule[randomDay].slots[randomSlot] = {
+              ...session,
+              slotId: `${days[randomDay].toLowerCase()}-${randomSlot}`
+            };
+            placed = true;
+          }
+        }
       }
-      
-      sessionIndex++;
     }
-    
-    schedule.push(daySchedule);
   });
-  
+
   return schedule;
 }
 
