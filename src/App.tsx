@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import TimetableGenerator from "./pages/TimetableGenerator";
+import TimetableView from "./pages/TimetableView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,8 @@ const App = () => (
           <Route path="/faculty" element={<FacultyDashboard />} />
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/admin/generate-timetable" element={<TimetableGenerator />} />
+          <Route path="/timetable-generator" element={<TimetableGenerator />} />
+          <Route path="/timetable-view" element={<TimetableView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

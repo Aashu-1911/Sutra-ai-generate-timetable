@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Home, Plus, Eye, Edit, ArrowLeft, Zap, Download } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const TimetableGenerator = () => {
@@ -13,6 +13,7 @@ const TimetableGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedTimetable, setGeneratedTimetable] = useState(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const branches = [
     { value: "computer-eng", label: "Computer Engineering" },
@@ -59,6 +60,11 @@ const TimetableGenerator = () => {
       title: "Timetable Generated Successfully!",
       description: "Conflict-free timetable has been created with AI optimization.",
     });
+
+    // Navigate to the timetable view page
+    setTimeout(() => {
+      navigate(`/timetable-view?branch=${selectedBranch}&division=${selectedDivision}`);
+    }, 1000);
   };
 
   // Sample generated timetable data
@@ -196,7 +202,21 @@ const TimetableGenerator = () => {
                   )}
                 </Button>
                 
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                <Button 
+                  variant="outline" 
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => {
+                    if (selectedBranch && selectedDivision) {
+                      navigate(`/timetable-view?branch=${selectedBranch}&division=${selectedDivision}`);
+                    } else {
+                      toast({
+                        title: "Selection Required",
+                        description: "Please select both branch and division to view timetables.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                >
                   <Eye className="w-4 h-4 mr-2" />
                   View Existing Timetables
                 </Button>
