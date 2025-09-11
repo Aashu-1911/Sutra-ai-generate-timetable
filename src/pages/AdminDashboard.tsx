@@ -5,9 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Users, MessageSquare, Plus, Eye, Edit, Home, Bell, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { AcademicCalendar } from "@/components/ui/academic-calendar";
 
 const AdminDashboard = () => {
   const { toast } = useToast();
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [messages, setMessages] = useState([
     { id: 1, faculty: "Dr. Smith", message: "Not available Monday 10-11 AM", time: "2 hours ago", status: "unread" },
     { id: 2, faculty: "Prof. Johnson", message: "Lab unavailable Friday afternoon", time: "5 hours ago", status: "read" },
@@ -36,10 +38,12 @@ const AdminDashboard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Link to="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-primary-foreground/10 rounded-lg flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <h1 className="text-2xl font-bold text-primary-foreground">Timetable AI</h1>
+                <img 
+                  src="/lovable-uploads/1606dbd9-e5f2-4a27-b88e-820d9baad768.png" 
+                  alt="Timely.ai logo" 
+                  className="w-10 h-10"
+                />
+                <h1 className="text-2xl font-bold text-primary-foreground">Timely.ai</h1>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -65,16 +69,16 @@ const AdminDashboard = () => {
 
         {/* Main Actions */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {/* Timetable Management */}
+          {/* Generate Timetable */}
           <Card className="bg-card/50 backdrop-blur-sm shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader>
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-light rounded-lg flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-primary-foreground" />
+                  <Plus className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <CardTitle className="text-primary">Timetable Management</CardTitle>
-                  <CardDescription>Generate and manage academic schedules</CardDescription>
+                  <CardTitle className="text-primary">Generate Timetable</CardTitle>
+                  <CardDescription>Create new academic schedules</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -88,10 +92,6 @@ const AdminDashboard = () => {
               <Button variant="outline" className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 <Eye className="w-4 h-4 mr-2" />
                 View Existing Timetables
-              </Button>
-              <Button variant="outline" className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <Edit className="w-4 h-4 mr-2" />
-                Modify Timetables
               </Button>
             </CardContent>
           </Card>
@@ -202,23 +202,25 @@ const AdminDashboard = () => {
             <CardTitle className="text-primary">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <Button variant="outline" className="justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 <Users className="w-4 h-4 mr-2" />
                 Manage Faculty
               </Button>
-              <Button variant="outline" className="justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+              <Button 
+                variant="outline" 
+                className="justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                onClick={() => setCalendarOpen(true)}
+              >
                 <Calendar className="w-4 h-4 mr-2" />
                 Academic Calendar
-              </Button>
-              <Button variant="outline" className="justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <Bell className="w-4 h-4 mr-2" />
-                Send Notifications
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+      
+      <AcademicCalendar open={calendarOpen} onOpenChange={setCalendarOpen} />
     </div>
   );
 };

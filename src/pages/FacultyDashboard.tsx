@@ -3,13 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Home, MessageSquare, Clock, BookOpen, Send } from "lucide-react";
+import { Calendar, Home, MessageSquare, Clock, Send } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { BranchSelection } from "@/components/ui/branch-selection";
+import { AcademicCalendar } from "@/components/ui/academic-calendar";
 
 const FacultyDashboard = () => {
   const [message, setMessage] = useState("");
+  const [showBranchSelection, setShowBranchSelection] = useState(true);
+  const [selectedBranch, setSelectedBranch] = useState("");
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const { toast } = useToast();
+
+  const handleBranchSelection = (branch: string) => {
+    setSelectedBranch(branch);
+    setShowBranchSelection(false);
+  };
 
   // Sample timetable data
   const weeklySchedule = [
@@ -54,10 +64,12 @@ const FacultyDashboard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Link to="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-primary-foreground/10 rounded-lg flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <h1 className="text-2xl font-bold text-primary-foreground">Timetable AI</h1>
+                <img 
+                  src="/lovable-uploads/1606dbd9-e5f2-4a27-b88e-820d9baad768.png" 
+                  alt="Timely.ai logo" 
+                  className="w-10 h-10"
+                />
+                <h1 className="text-2xl font-bold text-primary-foreground">Timely.ai</h1>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -78,7 +90,12 @@ const FacultyDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">Faculty Dashboard</h1>
-          <p className="text-muted-foreground">Welcome, Dr. Sarah Johnson - Mathematics Department</p>
+          <p className="text-muted-foreground">Welcome, Dr. Vaishali Wangikar - Data Science Department</p>
+          {selectedBranch && (
+            <Badge variant="secondary" className="mt-2 bg-primary/10 text-primary">
+              {selectedBranch}
+            </Badge>
+          )}
         </div>
 
         {/* Weekly Schedule */}
@@ -192,32 +209,26 @@ const FacultyDashboard = () => {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary-lighter">6</div>
-                  <div className="text-sm text-muted-foreground">Practical Hours</div>
+                  <div className="text-sm text-muted-foreground">Lab Hours</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-secondary">5</div>
                   <div className="text-sm text-muted-foreground">Different Classes</div>
                 </div>
               </div>
-              
-              <div className="space-y-2 pt-4 border-t">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Mathematics</span>
-                  <Badge variant="outline" className="text-primary">8 hrs</Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Educational Psychology</span>
-                  <Badge variant="outline" className="text-primary">4 hrs</Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Research Methodology</span>
-                  <Badge variant="outline" className="text-primary">4 hrs</Badge>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </div>
       </div>
+      
+      <BranchSelection 
+        open={showBranchSelection} 
+        onOpenChange={setShowBranchSelection}
+        userRole="faculty"
+        onSelection={handleBranchSelection}
+      />
+      
+      <AcademicCalendar open={calendarOpen} onOpenChange={setCalendarOpen} />
     </div>
   );
 };

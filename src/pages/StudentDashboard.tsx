@@ -1,10 +1,23 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Home, BookOpen, Clock, MapPin, Download } from "lucide-react";
 import { Link } from "react-router-dom";
+import { BranchSelection } from "@/components/ui/branch-selection";
+import { AcademicCalendar } from "@/components/ui/academic-calendar";
 
 const StudentDashboard = () => {
+  const [showBranchSelection, setShowBranchSelection] = useState(true);
+  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
+  const handleBranchSelection = (branch: string, division?: string) => {
+    setSelectedBranch(branch);
+    setSelectedDivision(division || "");
+    setShowBranchSelection(false);
+  };
   // Sample student timetable data
   const studentSchedule = [
     { day: "Monday", slots: [
@@ -51,10 +64,12 @@ const StudentDashboard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Link to="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-primary-foreground/10 rounded-lg flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <h1 className="text-2xl font-bold text-primary-foreground">Timetable AI</h1>
+                <img 
+                  src="/lovable-uploads/1606dbd9-e5f2-4a27-b88e-820d9baad768.png" 
+                  alt="Timely.ai logo" 
+                  className="w-10 h-10"
+                />
+                <h1 className="text-2xl font-bold text-primary-foreground">Timely.ai</h1>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
@@ -78,6 +93,11 @@ const StudentDashboard = () => {
           <p className="text-muted-foreground">
             Welcome, {studentInfo.name} - {studentInfo.program} {studentInfo.semester}
           </p>
+          {selectedBranch && selectedDivision && (
+            <Badge variant="secondary" className="mt-2 bg-primary/10 text-primary">
+              {selectedBranch} - Division {selectedDivision}
+            </Badge>
+          )}
         </div>
 
         {/* Student Info Card */}
@@ -173,7 +193,7 @@ const StudentDashboard = () => {
         </Card>
 
         {/* Weekly Summary */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
           <Card className="bg-card/30 backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center space-x-3">
@@ -186,43 +206,15 @@ const StudentDashboard = () => {
             <CardContent className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Classes:</span>
-                <span className="font-medium text-primary">18</span>
+                <span className="font-medium text-primary">25</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Theory Hours:</span>
-                <span className="font-medium text-primary">12</span>
+                <span className="font-medium text-primary">11</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Practical Hours:</span>
-                <span className="font-medium text-primary-light">10</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Teaching Practice:</span>
-                <span className="font-medium text-primary-lighter">6</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card/30 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-primary">Subject Credits</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Educational Psychology</span>
-                <Badge variant="outline" className="text-primary">4 credits</Badge>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Mathematics Methods</span>
-                <Badge variant="outline" className="text-primary">3 credits</Badge>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">English Literature</span>
-                <Badge variant="outline" className="text-primary">3 credits</Badge>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Teaching Practice</span>
-                <Badge variant="outline" className="text-primary">4 credits</Badge>
+                <span className="text-muted-foreground">Lab Hours:</span>
+                <span className="font-medium text-primary-light">14</span>
               </div>
             </CardContent>
           </Card>
@@ -236,18 +228,28 @@ const StudentDashboard = () => {
                 <Download className="w-4 h-4 mr-2" />
                 Download Timetable
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                onClick={() => setCalendarOpen(true)}
+              >
                 <Calendar className="w-4 h-4 mr-2" />
                 Academic Calendar
-              </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Course Materials
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+      
+      <BranchSelection 
+        open={showBranchSelection} 
+        onOpenChange={setShowBranchSelection}
+        userRole="student"
+        onSelection={handleBranchSelection}
+      />
+      
+      <AcademicCalendar open={calendarOpen} onOpenChange={setCalendarOpen} />
     </div>
   );
 };
