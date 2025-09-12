@@ -5,6 +5,12 @@ import { Link } from "react-router-dom";
 import heroImage from "@/assets/timely-hero.jpg";
 
 const Index = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-accent via-secondary to-muted">
       {/* Header */}
@@ -20,8 +26,18 @@ const Index = () => {
               <h1 className="text-2xl font-bold text-primary-foreground">Timely.ai</h1>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <Link to="#features" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">Features</Link>
-              <Link to="#about" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">About</Link>
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors cursor-pointer"
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('dashboard')}
+                className="text-primary-foreground/80 hover:text-primary-foreground transition-colors cursor-pointer"
+              >
+                Dashboard
+              </button>
             </nav>
           </div>
         </div>
@@ -53,7 +69,7 @@ const Index = () => {
       </section>
 
       {/* Login Cards */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4" id="dashboard">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center text-primary mb-12">Access Your Dashboard</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
