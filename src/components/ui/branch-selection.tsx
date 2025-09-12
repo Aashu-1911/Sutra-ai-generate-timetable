@@ -8,8 +8,10 @@ interface BranchSelectionProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userRole: "student" | "faculty";
-  onSelection: (branch: string, division?: string) => void;
+  onSelection: (year: string, branch: string, division?: string) => void;
 }
+
+const years = ["1", "2", "3", "4"];
 
 const branches = [
   "Computer Engineering",
@@ -23,12 +25,13 @@ const branches = [
 const divisions = ["A", "B", "C", "D"];
 
 export const BranchSelection = ({ open, onOpenChange, userRole, onSelection }: BranchSelectionProps) => {
+  const [selectedYear, setSelectedYear] = useState<string>("");
   const [selectedBranch, setSelectedBranch] = useState<string>("");
   const [selectedDivision, setSelectedDivision] = useState<string>("");
 
   const handleProceed = () => {
-    if (selectedBranch && (userRole === "faculty" || selectedDivision)) {
-      onSelection(selectedBranch, selectedDivision);
+    if (selectedYear && selectedBranch && (userRole === "faculty" || selectedDivision)) {
+      onSelection(selectedYear, selectedBranch, selectedDivision);
       onOpenChange(false);
     }
   };
@@ -47,6 +50,24 @@ export const BranchSelection = ({ open, onOpenChange, userRole, onSelection }: B
             <CardTitle className="text-lg">Select Your Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Year
+              </label>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year}>
+                      Year {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">
                 Branch/Department
@@ -87,7 +108,7 @@ export const BranchSelection = ({ open, onOpenChange, userRole, onSelection }: B
 
             <Button 
               onClick={handleProceed}
-              disabled={!selectedBranch || (userRole === "student" && !selectedDivision)}
+              disabled={!selectedYear || !selectedBranch || (userRole === "student" && !selectedDivision)}
               className="w-full bg-primary hover:bg-primary-light"
             >
               Proceed to Dashboard

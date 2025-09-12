@@ -8,12 +8,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const TimetableGenerator = () => {
+  const [selectedYear, setSelectedYear] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
+  const [theoryLectureTime, setTheoryLectureTime] = useState("");
+  const [labTime, setLabTime] = useState("");
+  const [shortBreaks, setShortBreaks] = useState("");
+  const [longBreaks, setLongBreaks] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedTimetable, setGeneratedTimetable] = useState(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const years = [
+    { value: "1", label: "First Year" },
+    { value: "2", label: "Second Year" },
+    { value: "3", label: "Third Year" },
+    { value: "4", label: "Fourth Year" }
+  ];
 
   const branches = [
     { value: "computer-eng", label: "Computer Engineering" },
@@ -33,11 +45,32 @@ const TimetableGenerator = () => {
     { value: "div-c", label: "Division C" }
   ];
 
+  const theoryTimes = [
+    { value: "45", label: "45 minutes" },
+    { value: "50", label: "50 minutes" },
+    { value: "55", label: "55 minutes" },
+    { value: "60", label: "60 minutes" }
+  ];
+
+  const labTimes = [
+    { value: "90", label: "90 minutes" },
+    { value: "110", label: "110 minutes" },
+    { value: "120", label: "120 minutes" },
+    { value: "180", label: "180 minutes" }
+  ];
+
+  const breakOptions = [
+    { value: "1", label: "1" },
+    { value: "2", label: "2" },
+    { value: "3", label: "3" },
+    { value: "4", label: "4" }
+  ];
+
   const handleGenerateTimetable = async () => {
-    if (!selectedBranch || !selectedDivision) {
+    if (!selectedYear || !selectedBranch || !selectedDivision || !theoryLectureTime || !labTime || !shortBreaks || !longBreaks) {
       toast({
-        title: "Selection Required",
-        description: "Please select both branch and division to generate timetable.",
+        title: "Complete Form Required",
+        description: "Please fill all fields to generate timetable.",
         variant: "destructive"
       });
       return;
@@ -150,7 +183,23 @@ const TimetableGenerator = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-primary mb-2 block">Select Year</label>
+                <Select value={selectedYear} onValueChange={setSelectedYear}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((year) => (
+                      <SelectItem key={year.value} value={year.value}>
+                        {year.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div>
                 <label className="text-sm font-medium text-primary mb-2 block">Select Branch</label>
                 <Select value={selectedBranch} onValueChange={setSelectedBranch}>
@@ -181,6 +230,74 @@ const TimetableGenerator = () => {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-primary mb-2 block">Theory Lecture Time</label>
+                  <Select value={theoryLectureTime} onValueChange={setTheoryLectureTime}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {theoryTimes.map((time) => (
+                        <SelectItem key={time.value} value={time.value}>
+                          {time.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-primary mb-2 block">Lab Time</label>
+                  <Select value={labTime} onValueChange={setLabTime}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {labTimes.map((time) => (
+                        <SelectItem key={time.value} value={time.value}>
+                          {time.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-primary mb-2 block">No. of Short Breaks</label>
+                  <Select value={shortBreaks} onValueChange={setShortBreaks}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select count" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {breakOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-primary mb-2 block">No. of Long Breaks</label>
+                  <Select value={longBreaks} onValueChange={setLongBreaks}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select count" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {breakOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="flex flex-col space-y-3 pt-4">

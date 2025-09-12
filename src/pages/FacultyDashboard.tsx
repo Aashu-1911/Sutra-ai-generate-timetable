@@ -11,13 +11,17 @@ import { AcademicCalendar } from "@/components/ui/academic-calendar";
 
 const FacultyDashboard = () => {
   const [message, setMessage] = useState("");
-  const [showBranchSelection, setShowBranchSelection] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [showBranchSelection, setShowBranchSelection] = useState(true);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleBranchSelection = (branch: string) => {
+  const handleBranchSelection = (year: string, branch: string, division?: string) => {
+    setSelectedYear(year);
     setSelectedBranch(branch);
+    setSelectedDivision(division || "");
     setShowBranchSelection(false);
   };
 
@@ -93,7 +97,7 @@ const FacultyDashboard = () => {
           <p className="text-muted-foreground">Welcome, Dr. Vaishali Wangikar - Data Science Department</p>
           {selectedBranch && (
             <Badge variant="secondary" className="mt-2 bg-primary/10 text-primary">
-              {selectedBranch}
+              Year {selectedYear} - {selectedBranch}
             </Badge>
           )}
         </div>

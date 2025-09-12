@@ -11,9 +11,11 @@ const StudentDashboard = () => {
   const [showBranchSelection, setShowBranchSelection] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
   const [calendarOpen, setCalendarOpen] = useState(false);
 
-  const handleBranchSelection = (branch: string, division?: string) => {
+  const handleBranchSelection = (year: string, branch: string, division?: string) => {
+    setSelectedYear(year);
     setSelectedBranch(branch);
     setSelectedDivision(division || "");
     setShowBranchSelection(false);
@@ -95,7 +97,7 @@ const StudentDashboard = () => {
           </p>
           {selectedBranch && selectedDivision && (
             <Badge variant="secondary" className="mt-2 bg-primary/10 text-primary">
-              {selectedBranch} - Division {selectedDivision}
+              Year {selectedYear} - {selectedBranch} - Division {selectedDivision}
             </Badge>
           )}
         </div>
