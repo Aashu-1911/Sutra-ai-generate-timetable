@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Home, MessageSquare, Clock, Send } from "lucide-react";
+import { Calendar, Home, MessageSquare, Clock, Send, Settings, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { BranchSelection } from "@/components/ui/branch-selection";
@@ -156,7 +156,32 @@ const FacultyDashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Timetable Management */}
+          <Card className="bg-card/50 backdrop-blur-sm shadow-card">
+            <CardHeader>
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-light rounded-lg flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <div>
+                  <CardTitle className="text-primary">Timetable Management</CardTitle>
+                  <CardDescription>Request changes to your timetable</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="outline" className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                <Edit className="w-4 h-4 mr-2" />
+                Request Schedule Change
+              </Button>
+              <Button variant="outline" className="w-full justify-start border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                <Calendar className="w-4 h-4 mr-2" />
+                Mark Unavailable Slots
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Message Admin */}
           <Card className="bg-card/50 backdrop-blur-sm shadow-card">
             <CardHeader>

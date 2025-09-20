@@ -6,6 +6,7 @@ import { Calendar, Users, MessageSquare, Plus, Eye, Edit, Home, Bell, Check } fr
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { AcademicCalendar } from "@/components/ui/academic-calendar";
+import { DataImportService } from "@/utils/dataImportService";
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -28,6 +29,36 @@ const AdminDashboard = () => {
       title: "Request Resolved",
       description: `Marked ${message?.faculty}'s request as done. Faculty has been notified.`,
     });
+  };
+
+  const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const result = await DataImportService.importFile(file);
+      if (result.success) {
+        toast({
+          title: "Import Successful",
+          description: `Successfully imported ${result.recordCount} records from ${file.name}`,
+        });
+      } else {
+        toast({
+          title: "Import Failed",
+          description: result.error || "Failed to import data",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Import Error",
+        description: "An error occurred while importing the file",
+        variant: "destructive",
+      });
+    }
+
+    // Reset file input
+    event.target.value = '';
   };
 
   return (
@@ -73,7 +104,7 @@ const AdminDashboard = () => {
           <Card className="bg-card/50 backdrop-blur-sm shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-light rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-light rounded-lg flex items-center justify-center">
                   <Plus className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
@@ -82,19 +113,22 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <Button className="w-full justify-start bg-secondary hover:bg-secondary-light">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Faculty Data
-              </Button>
-              <Button variant="outline" className="w-full justify-start border-secondary text-secondary hover:bg-secondary hover:text-primary-foreground">
-                <Plus className="w-4 h-4 mr-2" />
-                Import Subjects
-              </Button>
-              <Button variant="outline" className="w-full justify-start border-secondary text-secondary hover:bg-secondary hover:text-primary-foreground">
-                <Plus className="w-4 h-4 mr-2" />
-                Configure Rooms
-              </Button>
+            <CardContent>
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileImport}
+                className="hidden"
+                id="data-import"
+              />
+              <label htmlFor="data-import">
+                <Button className="w-full justify-start bg-primary hover:bg-primary-light cursor-pointer" asChild>
+                  <span>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Import Data
+                  </span>
+                </Button>
+              </label>
             </CardContent>
           </Card>
           {/* Generate Timetable */}
