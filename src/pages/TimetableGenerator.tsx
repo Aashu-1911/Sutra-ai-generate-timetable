@@ -139,10 +139,12 @@ const TimetableGenerator = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Link to="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-primary-foreground/10 rounded-lg flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <h1 className="text-2xl font-bold text-primary-foreground">Timetable AI</h1>
+                <img 
+                  src="/lovable-uploads/1606dbd9-e5f2-4a27-b88e-820d9baad768.png" 
+                  alt="Sutra.ai logo" 
+                  className="w-10 h-10 rounded-full"
+                />
+                <h1 className="text-2xl font-bold text-primary-foreground">Sutra.ai</h1>
               </Link>
             </div>
             <div className="flex items-center space-x-4">

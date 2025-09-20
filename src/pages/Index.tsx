@@ -20,10 +20,10 @@ const Index = () => {
             <div className="flex items-center space-x-3">
               <img 
                 src="/lovable-uploads/1606dbd9-e5f2-4a27-b88e-820d9baad768.png" 
-                alt="Timely.ai logo" 
-                className="w-10 h-10"
+                alt="Sutra.ai logo" 
+                className="w-10 h-10 rounded-full"
               />
-              <h1 className="text-2xl font-bold text-primary-foreground">Timely.ai</h1>
+              <h1 className="text-2xl font-bold text-primary-foreground">Sutra.ai</h1>
             </div>
             <nav className="hidden md:flex space-x-6">
               <button 
@@ -50,7 +50,7 @@ const Index = () => {
             <div>
               <h1 className="text-5xl font-bold text-primary mb-6 leading-tight">
                 Welcome to 
-                <span className="text-primary-light block">Timely.ai</span>
+                <span className="text-primary-light block">Sutra.ai</span>
               </h1>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 Revolutionize your academic scheduling with AI-powered timetable generation. 
@@ -60,7 +60,7 @@ const Index = () => {
             <div className="relative">
               <img 
                 src={heroImage} 
-                alt="Timely.ai Timetable Interface" 
+                alt="Sutra.ai Timetable Interface" 
                 className="rounded-2xl shadow-elegant w-full h-auto"
               />
             </div>
@@ -162,7 +162,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 px-4">
         <div className="container mx-auto text-center">
-          <p>&copy; 2024 Timely.ai. Intelligent timetable generation for modern education.</p>
+          <p>&copy; 2024 Sutra.ai. Intelligent timetable generation for modern education.</p>
         </div>
       </footer>
     </div>
